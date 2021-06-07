@@ -1,11 +1,14 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.4.5"
+    val kotlinVersion = "1.4.32"
+    val springBootVersion = "2.4.5"
+    id("org.springframework.boot") version springBootVersion
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.4.32"
-    kotlin("plugin.spring") version "1.4.32"
-    kotlin("plugin.jpa") version "1.4.32"
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.spring") version kotlinVersion
+    kotlin("plugin.jpa") version kotlinVersion
+    kotlin("kapt") version kotlinVersion
 }
 
 group = "com.developers"
@@ -17,13 +20,25 @@ repositories {
 }
 
 dependencies {
+    // spring
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+    // etc
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    runtimeOnly("com.h2database:h2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation("org.mariadb.jdbc:mariadb-java-client:2.7.3")
+
+
+    // queryDSL
+    implementation("com.querydsl:querydsl-jpa:4.4.0")
+    kapt("com.querydsl:querydsl-apt:4.4.0:jpa")
+
+    // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("com.h2database:h2")
 }
 
 tasks.withType<KotlinCompile> {

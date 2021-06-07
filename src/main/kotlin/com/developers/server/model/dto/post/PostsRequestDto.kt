@@ -1,4 +1,4 @@
-package com.developers.server.model.dto
+package com.developers.server.model.dto.post
 
 data class PostsRequestDto(
     var title: String? = null,

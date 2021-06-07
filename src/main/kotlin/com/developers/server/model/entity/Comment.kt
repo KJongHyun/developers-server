@@ -3,10 +3,11 @@ package com.developers.server.model.entity
 import javax.persistence.*
 
 @Entity
-data class Post(
+data class Comment(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
+    @Column(name = "comment_id")
     val id: Long? = null,
-    val title: String,
-    var contents: String = ""
+    @Column(name = "post_id")
+    val postId: Long,
+    val body: String
 ) : BaseEntity()
