@@ -1,6 +1,6 @@
 package com.developers.server.model.dto.comment
 
-data class EnrollCommentRequestDto(
-    val postId: Long,
+data class ModifyCommentRequestDto(
+    val commentId: Long,
     val body: String
 )

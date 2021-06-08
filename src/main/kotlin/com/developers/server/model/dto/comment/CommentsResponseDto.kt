@@ -5,8 +5,8 @@ data class CommentsResponseDto(
 )
 
 data class CommentDto(
-    val postId: Long,
     val id: Long,
+    val postId: Long,
     val name: String,
     val email: String,
     val body: String

@@ -3,6 +3,7 @@ package com.developers.server.service
 import com.developers.server.CmLogger
 import com.developers.server.exception.CommunityException
 import com.developers.server.exception.ErrorCode
+import com.developers.server.model.dto.post.ModifyPostRequestDto
 import com.developers.server.model.dto.post.PostDto
 import com.developers.server.model.dto.post.PostsRequestDto
 import com.developers.server.model.dto.post.PostsResponseDto
@@ -18,15 +19,14 @@ class PostService(
     companion object : CmLogger
 
     suspend fun enrollPost(postsRequestDto: PostsRequestDto) {
-        postRepository.save(
-            Post(title = postsRequestDto.title!!, contents = postsRequestDto.contents!!)
-        )
+        Post(title = postsRequestDto.title, contents = postsRequestDto.contents).let {
+            postRepository.save(it)
+        }
+
     }
 
-    suspend fun readPost(id: Long): PostDto {
-        val post = postRepository.findById(id).orElseThrow {
-            throw CommunityException(ErrorCode.NOT_EXIST_POST)
-        }
+    suspend fun readPost(postId: Long): PostDto {
+        val post = postRepository.findById(postId).orElseThrow { throw CommunityException(ErrorCode.DATA_NOT_FOUND, "post not found -> postId : $postId") }
 
         return PostDto(
             userId = 1,
@@ -36,12 +36,12 @@ class PostService(
         )
     }
 
-    suspend fun modifyPost(postsRequestDto: PostsRequestDto) {
-        TODO("Not yet implemented")
+    suspend fun modifyPost(modifyPostRequestDto: ModifyPostRequestDto) {
+        postRepository.findById(modifyPostRequestDto.postId).orElseThrow { throw CommunityException(ErrorCode.DATA_NOT_FOUND, "post not found -> postId : ${modifyPostRequestDto.postId}") }.update(modifyPostRequestDto)
     }
 
     suspend fun deletePost(postId: Long) {
-        TODO("Not yet implemented")
+        postRepository.deleteById(postId)
     }
 
     suspend fun posts(): PostsResponseDto {
@@ -52,9 +52,4 @@ class PostService(
             return PostsResponseDto(list = postDtoList)
         }
     }
-
-    fun deleteComment(commentId: Long) {
-        TODO("Not yet implemented")
-    }
-
 }

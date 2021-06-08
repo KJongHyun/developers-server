@@ -3,6 +3,8 @@ package com.developers.server.controller
 import com.developers.server.CmLogger
 import com.developers.server.model.dto.comment.CommentsResponseDto
 import com.developers.server.model.dto.comment.EnrollCommentRequestDto
+import com.developers.server.model.dto.comment.ModifyCommentRequestDto
+import com.developers.server.model.dto.post.ModifyPostRequestDto
 import com.developers.server.model.dto.post.PostDto
 import com.developers.server.model.dto.post.PostsRequestDto
 import com.developers.server.model.dto.post.PostsResponseDto
@@ -12,10 +14,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/posts")
-class PostController(
-    private val postService: PostService,
-    private val commentService: CommentService
-) {
+class PostController(private val postService: PostService) {
 
     companion object : CmLogger
 
@@ -25,8 +24,8 @@ class PostController(
     }
 
     @PutMapping
-    suspend fun modifyPost(@RequestBody postsRequestDto: PostsRequestDto) {
-        postService.modifyPost(postsRequestDto)
+    suspend fun modifyPost(@RequestBody modifyPostRequestDto: ModifyPostRequestDto) {
+        postService.modifyPost(modifyPostRequestDto)
     }
 
     @DeleteMapping("/{postId}")
@@ -42,21 +41,6 @@ class PostController(
     @GetMapping("/{postId}")
     suspend fun readPost(@PathVariable postId: Long): PostDto {
         return postService.readPost(postId)
-    }
-
-    @PostMapping("/{postId}/comment")
-    suspend fun enrollComment(@PathVariable postId: Long, enrollCommentRequestDto: EnrollCommentRequestDto) {
-        commentService.enrollComment(postId, enrollCommentRequestDto)
-    }
-
-    @GetMapping("/{postId}/comments")
-    suspend fun comments(@PathVariable postId: Long): CommentsResponseDto {
-        return commentService.comments(postId)
-    }
-
-    @DeleteMapping("/comment/{commentId}")
-    suspend fun deleteComment(@PathVariable commentId: Long) {
-        commentService.deleteComment(commentId)
     }
 
 }
