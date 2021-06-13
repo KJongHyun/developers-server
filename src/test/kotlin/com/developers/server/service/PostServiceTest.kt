@@ -26,44 +26,4 @@ internal class PostServiceTest : CmLogger {
 
     @Autowired
     lateinit var queryFactory: JPAQueryFactory
-
-    @BeforeEach
-    fun before() {
-        repeat(10) {
-            Post(
-                title = UUID.randomUUID().toString().substring(0, 5),
-                contents = UUID.randomUUID().toString().substring(0, 10)
-            ).also {
-                postRepository.save(it)
-            }
-        }
-    }
-
-    @Test
-    @DisplayName("QueryDsl Test")
-    fun queryDsl() {
-        val count = queryFactory.selectFrom(post).fetchCount()
-        log.debug("count -> $count")
-    }
-
-    @Test
-    fun paging() {
-        val result = queryFactory.selectFrom(post)
-            .orderBy(post.title.desc())
-            .offset(1)
-            .limit(2)
-            .fetch()
-
-        assertEquals(2, result.count())
-    }
-
-    @Test
-    fun aggregation() {
-        queryFactory
-            .select(
-                post.count()
-            )
-            .from(post)
-            .fetch()
-    }
 }
